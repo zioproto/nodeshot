@@ -125,19 +125,29 @@ class ZoneToDns(models.Model):
     zone                = models.OneToOneField(Zone, db_index=True, unique=True)
     value               = models.SlugField(_('value'), max_length=20)
 
+    def __unicode__(self):
+        return self.value
+
 class NodeToDns(models.Model):
-    zone                = models.OneToOneField(Node, db_index=True, unique=True)
+    node                = models.OneToOneField(Node, db_index=True, unique=True)
     value               = models.SlugField(_('value'), max_length=20)
+
+    def __unicode__(self):
+        return self.value
 
 class DeviceToDns(models.Model):
-    zone                = models.OneToOneField(Device, db_index=True, unique=True)
+    device              = models.OneToOneField(Device, db_index=True, unique=True)
     value               = models.SlugField(_('value'), max_length=20)
+
+    def __unicode__(self):
+        return self.value
 
 class InterfaceToDns(models.Model):
-    zone                = models.OneToOneField(Interface, db_index=True)
+    interface           = models.OneToOneField(Interface, db_index=True)
     value               = models.SlugField(_('value'), max_length=20)
 
-
+    def __unicode__(self):
+        return self.value
 
 class DomainPolicy(BaseDate):
     """

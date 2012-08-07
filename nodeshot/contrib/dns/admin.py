@@ -58,11 +58,25 @@ class UserRecordAdmin(BaseAdmin):
         (None,       {'fields': ['user']}),
     ]
 
+class ZoneToDnsAdmin(admin.ModelAdmin):
+    pass
+
+class NodeToDnsAdmin(admin.ModelAdmin):
+    pass
+
+class DeviceToDnsAdmin(admin.ModelAdmin):
+    pass
+
+class InterfaceToDnsAdmin(admin.ModelAdmin):
+    pass
 
 admin.site.register(dns.models.Domain, DomainAdmin)
 admin.site.register(dns.models.Record, RecordAdmin)
 admin.site.register(dns.models.DomainPolicy, DomainPolicyAdmin)
 admin.site.register(dns.models.UserRecord, UserRecordAdmin)
-#admin.site.register(dns.models.DomainManager)
+admin.site.register(dns.models.ZoneToDns, ZoneToDnsAdmin)
+admin.site.register(dns.models.NodeToDns, NodeToDnsAdmin)
+admin.site.register(dns.models.DeviceToDns, DeviceToDnsAdmin)
+admin.site.register(dns.models.InterfaceToDns, InterfaceToDnsAdmin)
 
 
