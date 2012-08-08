@@ -311,6 +311,7 @@ class Interface(models.Model):
     ipv4_address = models.IPAddressField(verbose_name=_('ipv4 address'), blank=True, null=True, unique=True, default=None)
     ipv6_address = models.GenericIPAddressField(protocol='IPv6', verbose_name=_('ipv6 address'), blank=True, null=True, unique=True, default=None)
     mac_address = models.CharField(max_length=17, blank=True, null=True, unique=True, default=None)
+    ifname = models.CharField(max_length=255, blank=True, null=True, unique=False, default=None)
     type = models.CharField(max_length=10, choices=INTERFACE_TYPE)
     # TODO: add translation
     cname = models.SlugField(_('cname'), help_text=_('Name used for DNS resolution. Example: eth0 becomes eth0.devicecname.nodename.domain.org. If left empty the interface type is used as default.'), max_length=30, blank=True, null=True)
