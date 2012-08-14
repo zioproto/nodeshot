@@ -15,5 +15,13 @@ __builtins__.IS_SCRIPT = True
 #from django.db.models import Q
 
 from nodeshot.models import Interface
-i = Interface.objects.all()
-print i
+from rrdgraphs.models import Graph
+
+for i in Interface.objects.all():
+	try:
+		g = Graph.objects.get(interface=i)
+		if g.draw_graph:
+			print i
+
+	except:
+		None #print "No graph record for this interface\n"
