@@ -117,6 +117,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.admin',
     'nodeshot',
+    'rrdgraphs',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
 )
