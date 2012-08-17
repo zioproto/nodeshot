@@ -2,7 +2,7 @@
 
 from pysnmp.entity.rfc3413.oneliner import cmdgen
 import sys, os, re, struct, threading
-
+import rrdtool
 # determine directory automatically
 directory = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.abspath(os.path.join(directory, os.path.pardir, os.path.pardir))
@@ -30,19 +30,39 @@ oids = {'device_name': {'oid': (1,3,6,1,2,1,1,5,0), 'query_type': 'get',  'pos' 
         }
 
 
-def tempname(ip,ifname):
+def tempname(inf):
     'comment'
-    print "ifname" +ifname + "\n"
+    print "ifname" +inf.ifname + "\n"
     global community
-    transport = cmdgen.UdpTransportTarget((ip, 161))
+    transport = cmdgen.UdpTransportTarget((inf.ipv4_address, 161))
     oid_in = None
     oid_out = None
     # search for the right oid
     for i in range(0,10):
-            	if cmdgen.CommandGenerator().getCmd(community, transport, (1,3,6,1,2,1,2,2,1,2,i)  )[3][0][1] == ifname:
+            	if cmdgen.CommandGenerator().getCmd(community, transport, (1,3,6,1,2,1,2,2,1,2,i)  )[3][0][1] == inf.ifname:
                 	oid_in  = 1,3,6,1,2,1,2,2,1,10,i 
                 	oid_out = 1,3,6,1,2,1,2,2,1,16,i
 			print oid_in
+			try:
+				rrdtool.create( str(inf.id)+".rrd",
+				'--no-overwrite',
+				'--start',' 946684800',
+				'DS:out:COUNTER:600:U:U',
+				'DS:in:COUNTER:600:U:U',
+				'RRA:LAST:0.5:1:8640', 
+				'RRA:AVERAGE:0.5:6:600',
+				'RRA:AVERAGE:0.5:24:600',
+				'RRA:AVERAGE:0.5:288:600')
+			except:
+				None #File Exist
+
+			inOctet  =  cmdgen.CommandGenerator().getCmd(community, transport,oid_in )[3][0][1]
+			outOctet =  cmdgen.CommandGenerator().getCmd(community, transport,oid_out)[3][0][1]
+
+			rrdtool.update(str(inf.id)+".rrd","N:"+ str(outOctet) +":" + str(inOctet) )
+			
+	
+
 
 class SNMPBugger(threading.Thread):
     def __init__(self, id):
@@ -68,7 +88,7 @@ class SNMPBugger(threading.Thread):
                 node = inf.device.node
 		ifname = inf.ifname
 		if ifname:
-			tempname(ip,ifname)
+			tempname(inf)
 
 
             else:
