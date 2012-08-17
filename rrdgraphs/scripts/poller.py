@@ -7,7 +7,8 @@ import rrdtool
 directory = os.path.dirname(os.path.realpath(__file__))
 parent = os.path.abspath(os.path.join(directory, os.path.pardir, os.path.pardir))
 sys.path.append(parent)
-
+rrddatabasedir = parent + "/rrd/"
+print rrddatabasedir
 import settings
 from django.core.management import setup_environ
 setup_environ(settings)
@@ -44,7 +45,7 @@ def tempname(inf):
                 	oid_out = 1,3,6,1,2,1,2,2,1,16,i
 			print oid_in
 			try:
-				rrdtool.create( str(inf.id)+".rrd",
+				rrdtool.create( rrddatabasedir +str(inf.id)+".rrd",
 				'--no-overwrite',
 				'--start',' 946684800',
 				'DS:out:COUNTER:600:U:U',
@@ -59,7 +60,7 @@ def tempname(inf):
 			inOctet  =  cmdgen.CommandGenerator().getCmd(community, transport,oid_in )[3][0][1]
 			outOctet =  cmdgen.CommandGenerator().getCmd(community, transport,oid_out)[3][0][1]
 
-			rrdtool.update(str(inf.id)+".rrd","N:"+ str(outOctet) +":" + str(inOctet) )
+			rrdtool.update(rrddatabasedir+str(inf.id)+".rrd","N:"+ str(outOctet) +":" + str(inOctet) )
 			
 	
 
