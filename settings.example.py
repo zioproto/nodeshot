@@ -64,11 +64,6 @@ MEDIA_URL = '%smedia/' % SITE_URL
 # for django 1.4
 STATIC_URL = MEDIA_URL
 
-# URL prefix for admin media -- CSS, JavaScript and images. Make sure to use a
-# trailing slash.
-# Examples: "http://foo.com/media/", "/media/".
-ADMIN_MEDIA_PREFIX = '%sadmin/' % MEDIA_URL
-
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = '(i+!)&s9crw*eg^!)(uudsdr%+*+g)(d$fs32eh7a3*z-dd3'
 
