@@ -55,7 +55,7 @@ def tempname(inf):
 				'RRA:AVERAGE:0.5:24:600',
 				'RRA:AVERAGE:0.5:288:600')
 			except:
-				None #File Exist
+				print "Not creating \n" #File Exist
 
 			inOctet  =  cmdgen.CommandGenerator().getCmd(community, transport,oid_in )[3][0][1]
 			outOctet =  cmdgen.CommandGenerator().getCmd(community, transport,oid_out)[3][0][1]

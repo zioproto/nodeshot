@@ -1822,7 +1822,7 @@ var nodeshot = {
                 }
                 // add an onclick event for the link which shows etx and dBm
                 link.clickListener = google.maps.event.addListener(link, 'click',  function(event){
-                    nodeshot.gmap.infoWindow.setContent('<b>etx</b>: '+etx+'<br /><b>dBm</b>: '+dbm);
+                    nodeshot.gmap.infoWindow.setContent('<b>etx</b>: '+etx+'<br /><b>dBm</b>: '+dbm+ '<br /> ');
                     nodeshot.gmap.infoWindow.maxWidth = 50;
                     nodeshot.gmap.infoWindow.position = event.latLng;
                     nodeshot.gmap.infoWindow.open(nodeshot.gmap.map);
