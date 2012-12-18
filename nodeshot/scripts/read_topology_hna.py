@@ -205,26 +205,41 @@ if __name__ == "__main__":
                     for b in range(0,len(ipsB)):
                         if not found:
                             ipA, ipB = ipsA[a], ipsB[b]
-                            saved_links =  Link.objects.filter(Q(from_interface__ipv4_address=ipA , to_interface__ipv4_address=ipB ) |  Q(from_interface__ipv4_address=ipB , to_interface__ipv4_address=ipA ))
+                            if is_valid_ipv4(ipA):
+                                saved_links =  Link.objects.filter(Q(from_interface__ipv4_address=ipA , to_interface__ipv4_address=ipB ) |  Q(from_interface__ipv4_address=ipB , to_interface__ipv4_address=ipA ))
+                            elif is_valid_ipv6(ipA):
+                                saved_links =  Link.objects.filter(Q(from_interface__ipv6_address=ipA , to_interface__ipv6_address=ipB ) |  Q(from_interface__ipv6_address=ipB , to_interface__ipv6_address=ipA ))
+                            else :
+                                continue
                             if saved_links.count() > 0:
                                 # if a link already exists, update
                                 l = saved_links[0]
                                 if not l.from_interface.draw_link or not l.to_interface.draw_link:
                                     continue
-                                l.etx = etx
+                                if is_valid_ipv4(ipA):
+                                   l.etx = etx
+                                else:
+                                   l.etxipv6 = etx
                                 l.save()
                                 old_links[l.id] = True
                                 found = True
                                 print "Updated link: %s" % l
                             else:
                                 # otherwise create a new link
-                                fi = Interface.objects.filter(ipv4_address = ipA).exclude(type='vpn').exclude(draw_link=False)
-                                to = Interface.objects.filter(ipv4_address = ipB).exclude(type='vpn').exclude(draw_link=False)
+                                if is_valid_ipv4(ipA):
+                                    fi = Interface.objects.filter(ipv4_address = ipA).exclude(type='vpn').exclude(draw_link=False)
+                                    to = Interface.objects.filter(ipv4_address = ipB).exclude(type='vpn').exclude(draw_link=False)
+                                else:
+                                    fi = Interface.objects.filter(ipv6_address = ipA).exclude(type='vpn').exclude(draw_link=False)
+                                    to = Interface.objects.filter(ipv6_address = ipB).exclude(type='vpn').exclude(draw_link=False)
                                 if fi.count() == 1 and to.count() == 1:
                                   # create a link if the neighbors are NOT on the same node
                                   #print fi, fi.get().id, to, to.get().id
                                   if fi.get().device.node != to.get().device.node:
-                                    l = Link(from_interface = fi.get(), to_interface = to.get(), etx = etx).save()
+                                      if is_valid_ipv4(ipA):
+                                          l = Link(from_interface = fi.get(), to_interface = to.get(), etx = etx).save()
+                                      else:
+                                          l = Link(from_interface = fi.get(), to_interface = to.get(), etxipv6 = etx).save()
                                     print "Saved new link: %s" % l
                                     found = True
                                 elif fi.count() > 1 or to.count() >1:
