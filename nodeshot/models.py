@@ -394,6 +394,7 @@ class Link(models.Model):
     from_interface = models.ForeignKey(Interface, related_name='from_interface')
     to_interface = models.ForeignKey(Interface, related_name='to_interface')
     etx = models.FloatField(default=0)
+    etxipv6 = models.FloatField(default=0)
     dbm = models.IntegerField(default=0)
     sync_tx = models.IntegerField(default=0)
     sync_rx = models.IntegerField(default=0)
@@ -405,6 +406,13 @@ class Link(models.Model):
             if 0 < self.etx < 1.5:
                quality = 1
             elif self.etx < 3:
+               quality = 2
+            else:
+                quality = 3
+        elif type == 'etxipv6':
+            if 0 < self.etxipv6 < 1.5:
+               quality = 1
+            elif self.etxipv6 < 3:
                quality = 2
             else:
                 quality = 3
@@ -420,6 +428,9 @@ class Link(models.Model):
     def get_etx(self):
         """ return etx as a string to avoid dot to comma conversion (it happens only with certain LANGUAGE_CODEs like IT)"""
         return str(self.etx)
+    def get_etxipv6(self):
+        """ return etx as a string to avoid dot to comma conversion (it happens only with certain LANGUAGE_CODEs like IT)"""
+        return str(self.etxipv6)
     
     def __unicode__(self):
         return u'%s » %s' % (self.from_interface.device, self.to_interface.device)
